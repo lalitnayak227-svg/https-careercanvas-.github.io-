@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Canvas | Build Your Identity</title>
+    <style>
+        /* --- RESET & FONTS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&family=Space+Grotesk:wght@300;700&display=swap');
+
+        :root {
+            --bg-dark: #050505;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --accent-glow: #00d2ff;
+            --accent-secondary: #3a7bd5;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* --- BACKGROUND ANIMATION --- */
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+            background: radial-gradient(circle at 50% 50%, #1a1f35 0%, #000000 100%);
+        }
+        
+        /* Floating Orbs */
+        .orb {
+            position: fixed; border-radius: 50%; filter: blur(80px); z-index: -1;
+            animation: floatOrb 10s infinite alternate ease-in-out; opacity: 0.4;
+        }
+        .orb-1 { top: 10%; left: 10%; width: 300px; height: 300px; background: var(--accent-secondary); }
+        .orb-2 { bottom: 20%; right: 10%; width: 400px; height: 400px; background: #7928ca; animation-delay: -5s; }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 50px); }
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: fixed; top: 0; width: 100%; padding: 20px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; backdrop-filter: blur(10px); border-bottom: 1px solid var(--glass-border);
+        }
+        .logo {
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 1px;
+            background: linear-gradient(90deg, #fff, var(--accent-glow)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; position: relative; transform-style: preserve-3d;
+        }
+
+        h1.hero-title {
+            font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 8vw, 8rem); font-weight: 800; line-height: 1.1;
+            color: rgba(255, 255, 255, 0.1); text-transform: uppercase; position: relative;
+            animation: breathe 4s ease-in-out infinite alternate;
+        }
+
+        h1.hero-title span {
+            display: block;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 51%, rgba(255, 255, 255, 0.5) 100%);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+            filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.3)); transform: translateZ(50px);
+        }
+
+        .hero-tagline {
+            margin-top: 30px; font-size: 1.5rem; color: var(--accent-glow); letter-spacing: 2px;
+            text-transform: uppercase; opacity: 0; animation: fadeUp 1s ease-out 1s forwards; font-weight: 300;
+        }
+
+        /* 3D CUBES ANIMATION */
+        .scene { position: absolute; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+        .cube { position: absolute; width: 100px; height: 100px; transform-style: preserve-3d; animation: rotateCube 15s infinite linear; }
+        .cube-1 { top: 20%; left: 15%; width: 80px; height: 80px; }
+        .cube-2 { bottom: 20%; right: 15%; width: 120px; height: 120px; animation-duration: 20s; animation-direction: reverse; }
+
+        .cube-face {
+            position: absolute; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); box-shadow: 0 0 20px rgba(0, 210, 255, 0.1);
+        }
+
+        .front { transform: rotateY(0deg) translateZ(50px); } .back { transform: rotateY(180deg) translateZ(50px); }
+        .right { transform: rotateY(90deg) translateZ(50px); } .left { transform: rotateY(-90deg) translateZ(50px); }
+        .top { transform: rotateX(90deg) translateZ(50px); } .bottom { transform: rotateX(-90deg) translateZ(50px); }
+        
+        /* Correction for Cube 2 size */
+        .cube-2 .front { transform: rotateY(0deg) translateZ(60px); } .cube-2 .back { transform: rotateY(180deg) translateZ(60px); }
+        .cube-2 .right { transform: rotateY(90deg) translateZ(60px); } .cube-2 .left { transform: rotateY(-90deg) translateZ(60px); }
+        .cube-2 .top { transform: rotateX(90deg) translateZ(60px); } .cube-2 .bottom { transform: rotateX(-90deg) translateZ(60px); }
+        /* Correction for Cube 1 size */
+        .cube-1 .front { transform: rotateY(0deg) translateZ(40px); } .cube-1 .back { transform: rotateY(180deg) translateZ(40px); }
+        .cube-1 .right { transform: rotateY(90deg) translateZ(40px); } .cube-1 .left { transform: rotateY(-90deg) translateZ(40px); }
+        .cube-1 .top { transform: rotateX(90deg) translateZ(40px); } .cube-1 .bottom { transform: rotateX(-90deg) translateZ(40px); }
+
+        @keyframes rotateCube { 0% { transform: rotateX(0deg) rotateY(0deg); } 100% { transform: rotateX(360deg) rotateY(360deg); } }
+        @keyframes breathe { 0% { transform: scale(1); } 100% { transform: scale(1.02); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- SECTIONS COMMON --- */
+        section { padding: 100px 10%; position: relative; z-index: 2; }
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; margin-bottom: 40px;
+            color: var(--text-main); border-left: 4px solid var(--accent-glow); padding-left: 20px;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 40px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        /* --- WHY US --- */
+        .why-us-content h2 {
+            font-size: 2rem; line-height: 1.3; margin-bottom: 30px;
+            background: linear-gradient(to right, #fff, #a0a0a0); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .why-us-content p { font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 20px; }
+        .why-us-highlight { color: var(--accent-glow); font-weight: 500; }
+
+        /* --- USP GRID --- */
+        .usp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
+        .usp-card {
+            background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 255, 255, 0.05); padding: 30px;
+            border-radius: 15px; transition: 0.3s;
+        }
+        .usp-card:hover { border-color: var(--accent-secondary); background: rgba(58, 123, 213, 0.1); }
+        .usp-icon { font-size: 2.5rem; margin-bottom: 15px; display: inline-block; }
+        .usp-card h3 { color: #fff; margin-bottom: 15px; font-family: 'Space Grotesk', sans-serif; font-size: 1.3rem; }
+        .usp-desc { color: var(--text-muted); line-height: 1.6; }
+        .usp-summary {
+            text-align: center; font-size: 1.2rem; max-width: 800px; margin: 0 auto; color: var(--text-main);
+            padding: 30px; border-top: 1px solid var(--glass-border); margin-top: 50px; font-style: italic;
+        }
+
+        /* --- NEW: PROCESS SECTION --- */
+        .process-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-top: 40px; }
+        .process-step { position: relative; padding: 20px; border-left: 2px solid var(--glass-border); }
+        .step-number {
+            font-family: 'Space Grotesk'; font-size: 4rem; font-weight: 800; color: rgba(255,255,255,0.05);
+            position: absolute; top: 0; left: 10px; line-height: 1; z-index: -1;
+        }
+        .step-title { font-size: 1.5rem; margin-bottom: 15px; color: #fff; }
+        .step-desc { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+
+        /* --- NEW: DELIVERABLES CHECKLIST --- */
+        .checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .check-item { display: flex; align-items: center; color: #fff; font-size: 1.1rem; }
+        .check-icon { color: var(--accent-glow); margin-right: 15px; }
+
+        /* --- CONTACT --- */
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px; }
+        .contact-card {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px;
+            border-radius: 20px; text-decoration: none; transition: all 0.4s ease;
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
+        }
+        .contact-card:hover { transform: translateY(-5px) scale(1.02); background: rgba(255, 255, 255, 0.08); box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.5); }
+        .contact-icon { font-size: 3rem; margin-bottom: 15px; transition: transform 0.3s ease; }
+        .contact-card:hover .contact-icon { transform: scale(1.2) rotate(5deg); }
+        .contact-label { font-family: 'Space Grotesk', sans-serif; color: var(--text-main); font-size: 1.5rem; margin-bottom: 5px; }
+        .contact-info { color: var(--accent-glow); font-size: 1.1rem; font-family: 'Outfit', sans-serif; letter-spacing: 1px; margin-top: 5px; }
+        
+        .whatsapp-card:hover { border-color: #25D366; box-shadow: 0 0 30px rgba(37, 211, 102, 0.2); }
+        .whatsapp-card .contact-info { color: #25D366; }
+        .email-card:hover { border-color: #EA4335; box-shadow: 0 0 30px rgba(234, 67, 53, 0.2); }
+        .email-card .contact-info { color: #EA4335; }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center; padding: 40px 20px; border-top: 1px solid var(--glass-border);
+            color: var(--text-muted); font-size: 0.9rem; backdrop-filter: blur(10px); margin-top: 50px; background: rgba(0,0,0,0.5);
+        }
+        .footer-tagline { font-size: 1.2rem; color: #fff; margin-bottom: 10px; font-family: 'Space Grotesk', sans-serif; }
+
+        /* Animation Classes */
+        .hidden { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .show { opacity: 1; transform: translateY(0); }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <nav>
+        <div class="logo">CAREER CANVAS</div>
+        <div style="color: white; font-size: 0.9rem;">v3.0</div>
+    </nav>
+
+    <header class="hero" id="home">
+        <div class="scene">
+            <div class="cube cube-1"><div class="cube-face front"></div><div class="cube-face back"></div><div class="cube-face right"></div><div class="cube-face left"></div><div class="cube-face top"></div><div class="cube-face bottom"></div></div>
+            <div class="cube cube-2"><div class="cube-face front"></div><div class="cube-face back"></div><div class="cube-face right"></div><div class="cube-face left"></div><div class="cube-face top"></div><div class="cube-face bottom"></div></div>
+        </div>
+        <h1 class="hero-title"><span>Career</span><span>Canvas</span></h1>
+        <p class="hero-tagline">More than a resume, It's your identity</p>
+    </header>
+
+    <section id="why-us">
+        <div class="why-us-container glass-panel hidden">
+            <div class="why-us-content">
+                <h2 class="section-title">Why Career Canvas?</h2>
+                <h2>Your career is a masterpiece.<br>Don't display it on a cluttered wall.</h2>
+                <p>A standard resume is just data. A LinkedIn profile is rented space. To truly stand out in today's competitive landscape, you need a space that is uniquely yours.</p>
+                <p>Welcome to <span class="why-us-highlight">Career Canvas</span>. We craft bespoke, single-page portfolio websites designed to showcase your professional journey without distraction.</p>
+                <p style="border-left: 2px solid var(--accent-glow); padding-left: 15px; font-style: italic;">We use pure, handcrafted HTML and CSS.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="usp">
+        <h2 class="section-title hidden">The Career Canvas Edge</h2>
+        <div class="usp-grid">
+            <div class="usp-card hidden">
+                <div class="usp-icon">⚡</div>
+                <h3>The Art of Speed</h3>
+                <p class="usp-desc">Your portfolio loads instantly. In the time it takes a Wix site to wake up, your Career Canvas is already presenting your best work.</p>
+            </div>
+            <div class="usp-card hidden">
+                <div class="usp-icon">🔒</div>
+                <h3>Total Ownership</h3>
+                <p class="usp-desc">You buy the canvas, you own the art. No monthly fees. You receive the raw code files to host anywhere you like, forever.</p>
+            </div>
+            <div class="usp-card hidden">
+                <div class="usp-icon">🎯</div>
+                <h3>Distraction-Free</h3>
+                <p class="usp-desc">We strip away the noise. No pop-ups, no slow-loading plugins. Just clean code spotlighting what matters most: you.</p>
+            </div>
+        </div>
+        <div class="usp-summary hidden">"Whether you are a designer, a developer, or a marketer, we provide the perfect frame for your work."</div>
+    </section>
+
+    <section id="process">
+        <h2 class="section-title hidden">How It Works</h2>
+        <div class="glass-panel hidden">
+            <div class="process-grid">
+                <div class="process-step">
+                    <div class="step-number">01</div>
+                    <h3 class="step-title">Connect</h3>
+                    <p class="step-desc">Reach out via WhatsApp. We discuss your career goals, your style preference (Minimalist, Creative, or 3D), and the content you want to showcase.</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">02</div>
+                    <h3 class="step-title">Craft</h3>
+                    <p class="step-desc">I hand-code your site from scratch. No drag-and-drop builders. I optimize the code for speed and visual impact, ensuring it works on all devices.</p>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">03</div>
+                    <h3 class="step-title">Launch</h3>
+                    <p class="step-desc">You receive the complete source code file (`index.html`). You can host it on GitHub Pages, Netlify, or your own domain for free. It is yours forever.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="deliverables">
+        <h2 class="section-title hidden">What You Get</h2>
+        <div class="glass-panel hidden">
+            <h3 style="font-size: 1.5rem; margin-bottom: 20px;">The Career Canvas Package</h3>
+            <div class="checklist">
+                <div class="check-item"><span class="check-icon">✓</span> Single HTML File (Lightweight)</div>
+                <div class="check-item"><span class="check-icon">✓</span> Fully Responsive Mobile Design</div>
+                <div class="check-item"><span class="check-icon">✓</span> 3D / Glassmorphism Effects</div>
+                <div class="check-item"><span class="check-icon">✓</span> SEO Friendly Structure</div>
+                <div class="check-item"><span class="check-icon">✓</span> WhatsApp & Email Integration</div>
+                <div class="check-item"><span class="check-icon">✓</span> Lifetime Code Ownership</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2 class="section-title hidden">Get In Touch</h2>
+        <div class="glass-panel hidden" style="text-align: center; max-width: 900px; margin: 0 auto;">
+            <h3 style="font-size: 2rem; margin-bottom: 20px;">Ready to create your masterpiece?</h3>
+            <p style="color: var(--text-muted); margin-bottom: 40px;">Contact me directly below for custom requests.</p>
+
+            <div class="contact-grid">
+                <a href="https://wa.me/919348338300" target="_blank" class="contact-card whatsapp-card">
+                    <div class="contact-icon">💬</div>
+                    <span class="contact-label">WhatsApp</span>
+                    <span class="contact-info">+91 93483 38300</span>
+                </a>
+                <a href="mailto:lalitnayak227@gmail.com" class="contact-card email-card">
+                    <div class="contact-icon">✉️</div>
+                    <span class="contact-label">Email Me</span>
+                    <span class="contact-info">lalitnayak227@gmail.com</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p class="footer-tagline">Paint your professional picture. Let us handle the code.</p>
+        <p style="font-size: 0.8rem; opacity: 0.6;">&copy; 2025 Career Canvas. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Scroll Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add('show');
+            });
+        });
+        document.querySelectorAll('.hidden').forEach((el) => observer.observe(el));
+
+        // 3D Tilt for Hero
+        const hero = document.querySelector('.hero');
+        const title = document.querySelector('.hero-title');
+        hero.addEventListener('mousemove', (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            title.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+        hero.addEventListener('mouseleave', () => {
+            title.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+    </script>
+</body>
+</html>
